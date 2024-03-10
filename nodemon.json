@@ -1,0 +1,5 @@
+{
+  "watch": ["routes", "views", "app.js", "bin"],
+  "ext": ".ts,.js,.hbs",
+  "ignore": []
+}

@@ -1,0 +1,304 @@
+<h1 class="display-4 m-5">Sections</h1>
+<a
+  name=""
+  id=""
+  class="btn btn-primary ms-5"
+  href="/auth/logout"
+  role="button"
+>Logout</a>
+<button
+  type="button"
+  class="btn btn-secondary"
+  data-bs-toggle="modal"
+  data-bs-target="#createModal"
+>
+  Create new section
+</button>
+<p class="lead mt-3 ms-5 text-danger fw-bold">
+  {{message}}
+</p>
+<div
+  class="modal fade"
+  id="createModal"
+  tabindex="-1"
+  aria-labelledby="createModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="createModalLabel">Create new section</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form x-target="sections" method="post" action="/sections">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="sectionName" class="form-label">Section name</label>
+            <input
+              required
+              type="text"
+              class="form-control"
+              name="sectionName"
+              aria-describedby="helpId"
+              placeholder="Section name"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="sectionDescription" class="form-label">Section
+              description</label>
+            <textarea
+              required
+              class="form-control"
+              name="sectionDescription"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="" class="form-label">Duration</label>
+            <input
+              required
+              type="number"
+              class="form-control"
+              name="duration"
+              aria-describedby="helpId"
+              placeholder="Duration"
+            />
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" name="isMainTask" type="checkbox" />
+            <label class="form-check-label" for="flexSwitchCheckDefault">Main task</label>
+          </div>
+          <div class="mb-3">
+            <label for="course" class="form-label">Course</label>
+            <select class="form-select" name="course">
+              {{#each courses}}
+                <option value={{this._id}}>{{this.courseName}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >Close</div>
+          <button
+            @click="location.reload()"
+            type="submit"
+            class="btn btn-primary"
+          >Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="p-3 m-3">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Duration</th>
+        <th scope="col">Course</th>
+        <th scope="col">Main task</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="sections" x-init>
+      {{#each sections}}
+        <tr>
+          <th scope="row">{{this.number}}</th>
+          <th>{{this.sectionName}}</th>
+          <th>{{this.sectionDescription}}</th>
+          <th>{{this.duration}}</th>
+          <th>{{this.course.courseName}}</th>
+          <th>
+            {{#if this.isMainTask}}
+              &check;
+            {{/if}}
+          </th>
+          <th class="gap-3 align-middle">
+            <div
+              style="width: 100px"
+              class="d-flex justify-content-between m-auto"
+            >
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#update{{this.id}}Modal"
+              >
+                ⚙️
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#delete{{this.id}}Modal"
+              >
+                🗑️
+              </button>
+            </div>
+
+            <!-- Update Modal -->
+            <div
+              class="modal fade"
+              id="update{{this.id}}Modal"
+              tabindex="-1"
+              aria-labelledby="update{{this.id}}ModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1
+                      class="modal-title fs-5"
+                      id="update{{this.id}}ModalLabel"
+                    >Update '{{this.sectionName}}'</h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <form
+                    x-target="sections"
+                    method="put"
+                    action="/sections/{{this.id}}"
+                  >
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label for="sectionName" class="form-label">Section name</label>
+                        <input
+                          required
+                          type="text"
+                          class="form-control"
+                          name="sectionName"
+                          aria-describedby="helpId"
+                          placeholder="Section name"
+                          value="{{this.sectionName}}"
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <label
+                          for="sectionDescription"
+                          class="form-label"
+                        >Section description</label>
+                        <textarea
+                          required
+                          class="form-control"
+                          name="sectionDescription"
+                          rows="3"
+                        >{{this.sectionDescription}}</textarea>
+                      </div>
+                      <div class="mb-3">
+                        <label for="" class="form-label">Duration</label>
+                        <input
+                          required
+                          type="number"
+                          class="form-control"
+                          name="duration"
+                          aria-describedby="helpId"
+                          placeholder="Duration"
+                          value="{{this.duration}}"
+                        />
+                      </div>
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          name="isMainTask"
+                          type="checkbox"
+                          {{#if this.isMainTask}}checked{{/if}}
+                        />
+                        <label
+                          class="form-check-label"
+                          for="flexSwitchCheckDefault"
+                        >Main task</label>
+                      </div>
+                      <div class="mb-3">
+                        <label for="course" class="form-label">Course</label>
+                        <select class="form-select" name="course">
+                          {{#each this.coursesList}}
+                            <option
+                              value={{this.id}} {{#if this.currentCourse}}selected{{/if}}
+                            >{{this.courseName}}</option>
+                          {{/each}}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <div
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >Close</div>
+                      <button
+                        @click="location.reload()"
+                        type="submit"
+                        class="btn btn-primary"
+                      >Save changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Delete Modal -->
+            <div
+              class="modal fade"
+              id="delete{{this.id}}Modal"
+              tabindex="-1"
+              aria-labelledby="delete{{this.id}}ModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1
+                      class="modal-title fs-5"
+                      id="delete{{this.id}}ModalLabel"
+                    >Are you sure you want to delete '{{this.sectionName}}'</h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >Cancel
+                    </button>
+                    <form
+                      method="delete"
+                      action="/sections/{{this.id}}"
+                      x-target="sections"
+                    >
+                      <button
+                        @click="location.reload()"
+                        class="btn btn-danger"
+                      >Delete</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </th>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<!-- Button trigger modal -->
